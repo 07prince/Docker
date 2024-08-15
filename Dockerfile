@@ -45,4 +45,4 @@ COPY . /usr/app/
 EXPOSE 5000
 
 # Run the Flask API using app.py
-CMD ["python", "app.py"]
+CMD ["python", "flask_api.py"]
