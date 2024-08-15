@@ -9,7 +9,7 @@ from flasgger import Swagger
 app=Flask(__name__)
 Swagger(app)
 
-pickle_in = open(r'C:\Users\pshah\Desktop\BankNote_Authentication_docker\rf.pkl', 'rb')
+pickle_in = open(r'rf.pkl', 'rb')
 
 rf=pickle.load(pickle_in)
 
@@ -80,4 +80,4 @@ def prdict_file():
     return "the predicted value is "+ str(list(prediction))
 
 if __name__=='__main__':
-    app.run()
+    app.run(host='0.0.0.0',port=5000)
