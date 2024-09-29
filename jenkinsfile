@@ -1,0 +1,52 @@
+pipeline {
+    agent {
+        docker {
+            // Use a base Docker image for the Jenkins agent
+            image 'python:3.8-slim' // or any other base image you need
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Bind mount Docker socket if needed
+        }
+    }
+
+    environment {
+        DOCKER_IMAGE_NAME = 'princeshahi007/python_jenkins_pipeline'
+        DOCKER_REGISTRY_CREDENTIALS_ID = 'princeshahi007'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/07prince/Docker.git', branch: 'main'
+            }
+        }
+
+        stage('Set Up Python Environment') {
+            steps {
+                script {
+                    sh '''
+                        python -m venv venv
+                        . venv/bin/activate
+                        pip install -r requirements.txt
+                    ''' // Install dependencies
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}") .
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_REGISTRY_CREDENTIALS_ID}") {
+                        docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
+                    }
+                }
+            }
+        }
+    }
+}
