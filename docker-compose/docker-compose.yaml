@@ -1,0 +1,23 @@
+version: '3'
+services:
+  frontend:
+    image : mern-frontend
+    container_name: mern-frontend-docker-compose
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend  
+
+  backend:
+    image : mern-backend
+    container_name: mern-backend-docker-compose
+    ports:
+      - "5050:5050"
+    depends_on:
+      - mongodb 
+
+  mongodb:
+    image : mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
